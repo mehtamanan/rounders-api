@@ -8,6 +8,7 @@ let express = require('express')
 
 let { getDB } = require('./db');
 let indexRoutes = require('./routes');
+let usersRoutes = require('./routes/users');
 
 let app = express();
 
@@ -49,6 +50,7 @@ function configureCORS() {
 
 function configureRouters() {
     app.use('/', indexRoutes);
+    app.use('/users', usersRoutes);
 }
 
 function configureErrorHandlers() {
