@@ -26,6 +26,9 @@ function configure() {
     // configure CORS
     configureCORS();
 
+    // configure favicon
+    configureFavicon();
+
     // configure all routers
     configureRouters();
 
@@ -45,6 +48,10 @@ function configureCORS() {
         if (req.method === 'OPTIONS') return res.sendStatus(200);
         else return next();
     });
+}
+
+function configureFavicon() {
+    app.get('/favicon.ico', (req, res) => res.status(204));
 }
 
 function configureRouters() {
