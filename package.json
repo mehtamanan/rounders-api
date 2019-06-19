@@ -7,6 +7,7 @@
   "scripts": {
     "db:init": "node ./app/tasks/initdb.js",
     "db:seed": "node ./app/tasks/seeddb.js",
+    "db:setup": "node ./app/tasks/setupdb.js",
     "dev": "DEBUG=rounders-rest-service:* nodemon ./bin/www",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

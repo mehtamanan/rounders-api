@@ -1,5 +1,122 @@
 -- Database: rounders
 
+DROP TABLE users;
+DROP TABLE tags;
+DROP TABLE articles;
+DROP TABLE companies;
+DROP TABLE sponsored_articles;
+DROP TABLE comments;
+DROP TABLE bank_accounts;
+DROP TABLE institutions;
+DROP TABLE bank_records;
+DROP TABLE distribution_records;
+DROP TABLE reactions;
+DROP TABLE user_followings;
+DROP TABLE tag_followings;
+DROP TABLE article_tags;
+
+
+CREATE TABLE IF NOT EXISTS users(
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS tags(
+    id SERIAL PRIMARY KEY,
+    label VARCHAR(63) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS articles(
+    id SERIAL PRIMARY KEY,
+    author_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS companies(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS sponsored_articles(
+    article_id INTEGER PRIMARY KEY REFERENCES articles(id) ON DELETE CASCADE,
+    company_id INTEGER NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
+    promotion_until TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '1 DAY',
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+    id SERIAL PRIMARY KEY,
+    message TEXT NOT NULL,
+    author_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    article_id INTEGER NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS institutions(
+    bank_code CHAR(3) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS bank_accounts(
+    account_number CHAR(17) PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    bank_code CHAR(3) NOT NULL REFERENCES institutions(bank_code),
+    transit_number CHAR(5) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS bank_records(
+    id SERIAL PRIMARY KEY,
+    account_number CHAR(17) NOT NULL REFERENCES bank_accounts(account_number) ON DELETE CASCADE,
+    amount NUMERIC(12,2) NOT NULL,
+    action BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS distribution_records(
+    id SERIAL PRIMARY KEY,
+    from_id INTEGER NOT NULL REFERENCES users(id),
+    to_id INTEGER NOT NULL REFERENCES users(id),
+    amount NUMERIC(12,2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS reactions(
+    article_id INTEGER NOT NULL REFERENCES articles(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    count INTEGER NOT NULL CHECK (count <= 50),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (article_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS user_followings(
+    following_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    follower_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (following_id, follower_id)
+);
+
+CREATE TABLE IF NOT EXISTS tag_followings(
+    follower_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+    PRIMARY KEY (follower_id, tag_id)
+);
+
+CREATE TABLE IF NOT EXISTS article_tags(
+    article_id INTEGER REFERENCES articles(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+    PRIMARY KEY (article_id, tag_id)
+);
+
+
 INSERT INTO users (username, email, password, first_name, last_name) VALUES ('harry', 'harry@hogwarts.edu', 'alohomora', 'Harry', 'Potter');
 INSERT INTO users (username, email, password, first_name, last_name) VALUES ('hermoine', 'hermoine@hogwarts.edu', 'lumos', 'Hermoine', 'Granger');
 INSERT INTO users (username, email, password, first_name, last_name) VALUES ('ron', 'ron@hogwarts.edu', 'expelliarmus', 'Ron', 'Weasley');
@@ -86,3 +203,4 @@ INSERT INTO article_tags VALUES (1, 4);
 INSERT INTO article_tags VALUES (2, 5);
 INSERT INTO article_tags VALUES (3, 3);
 INSERT INTO article_tags VALUES (4, 2);
+
