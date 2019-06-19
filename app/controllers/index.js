@@ -1,5 +1,5 @@
 
-let { getDB } = require('../db');
+let { getDB } = require("../db");
 
 async function hello(req, res) {
     return res.json({ message: "Hello World" });
@@ -9,7 +9,7 @@ async function hello(req, res) {
 async function postUser(req, res) {
     try {
         let db = await getDB();
-        let result = await db.result('INSERT INTO users(${this:name}) VALUES(${this:csv})', req.body);
+        let result = await db.result("INSERT INTO users(${this:name}) VALUES(${this:csv})", req.body);
 
         return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
     } catch (err) {
@@ -21,7 +21,7 @@ async function postUser(req, res) {
 async function deleteArticle(req, res) {
     try {
         let db = await getDB();
-        let result = await db.query('DELETE FROM articles WHERE id = $1', req.params.id);
+        let result = await db.result("DELETE FROM articles WHERE id = $1", req.params.id);
 
         return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
     } catch (err) {
@@ -31,7 +31,14 @@ async function deleteArticle(req, res) {
 
 // UPDATE query
 async function patchUser(req, res) {
-    res.status(500).json({ error: "To be implemented!" });
+    try {
+        let db = await getDB();
+        let result = await db.result("UPDATE users SET password = $2 WHERE id = $1", [ req.params.id, req.body.password ]);
+
+        return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
 }
 
 // SELECTION

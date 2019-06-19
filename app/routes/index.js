@@ -24,7 +24,7 @@ router.delete('/articles/:id', controllers.deleteArticle);
 /***
  * PATCH /users/:id
  */
-router.patch('/users/:id', controllers.deleteArticle);
+router.patch('/users/:id', controllers.patchUser);
 
 /***
  * GET /articles
