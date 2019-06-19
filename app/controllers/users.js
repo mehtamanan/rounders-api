@@ -14,16 +14,15 @@ async function userPost(req, res) {
         last_name: req.body.lastName
     }
 
-    await db.getDB().then((db) => {
-        return db.query(
-            'INSERT INTO users(${this:name}) VALUES(${this:csv})',
-            user
+    try {
+        const dbConn = await db.getDB();
+        await dbConn.query(
+            'INSERT INTO users(${this:name}) VALUES (${this:csv})', user
         );
-    }).then((data) => {
         res.sendStatus(201);
-    }).catch(e => {
+    } catch(e) {
         res.sendStatus(400);
-    });
+    }
 }
 
 module.exports = {
