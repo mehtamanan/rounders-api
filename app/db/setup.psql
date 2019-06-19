@@ -91,8 +91,8 @@ CREATE TABLE IF NOT EXISTS distribution_records(
 );
 
 CREATE TABLE IF NOT EXISTS reactions(
-    article_id INTEGER NOT NULL REFERENCES articles(id),
-    user_id INTEGER NOT NULL REFERENCES users(id),
+    article_id INTEGER NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     count INTEGER NOT NULL CHECK (count <= 50),
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     PRIMARY KEY (article_id, user_id)
