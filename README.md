@@ -47,6 +47,6 @@ $ npm run dev
 
 #### Extras:
 
-GET /tags (for article write and search)
-GET /users/:id
-GET /users
++ GET /tags (for article write and search)
++ GET /users/:id
++ GET /users
