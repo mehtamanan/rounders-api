@@ -9,9 +9,10 @@ async function hello(req, res) {
 async function postUser(req, res) {
     try {
         let db = await getDB();
-        let result = await db.query('INSERT INTO users(${this:name}) VALUES(${this:csv})', req.body);
+        await db.query('INSERT INTO users(${this:name}) VALUES(${this:csv})', req.body);
 
-        return res.json({ result });
+        let count = await db.query('SELECT COUNT(id) FROM users');
+        return res.json({ count });
     } catch (err) {
         return res.status(400).json({ error: err });
     }
@@ -19,7 +20,15 @@ async function postUser(req, res) {
 
 // DELETE query
 async function deleteArticle(req, res) {
-    res.status(500).json({ error: "To be implemented!" });
+    try {
+        let db = await getDB();
+        await db.query('DELETE FROM articles WHERE id = $1', req.params.id);
+
+        let count = await db.query('SELECT COUNT(id) FROM articles');
+        return res.json({ count });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
 }
 
 // UPDATE query
