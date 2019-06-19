@@ -47,8 +47,13 @@ router.get('/users/:id/articles', controllers.getArticlesByUser);
 router.get('/analytics', controllers.getAnalytics);
 
 /***
+ * GET /leaderboard
+ */
+router.get('/leaderboard', controllers.getLeaderboard);
+
+/***
  * GET /xxx
  */
-router.get('/xxx', controllers.getXXX);
+router.get('/trending', controllers.getArticlesLikedByAllUsers);
 
 module.exports = router;

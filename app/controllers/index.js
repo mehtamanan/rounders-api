@@ -33,7 +33,7 @@ async function deleteArticle(req, res) {
 async function patchUser(req, res) {
     try {
         let db = await getDB();
-        let result = await db.result("UPDATE users SET password = g$2 WHERE id = $1", [ req.params.id, req.body.password ]);
+        let result = await db.result("UPDATE users SET password = $2 WHERE id = $1", [ req.params.id, req.body.password ]);
 
         return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
     } catch (err) {
@@ -83,13 +83,42 @@ async function getArticlesByUser(req, res) {
 // 1. Count of all new users and new articles and new claps
 // 2. Avg claps/user, avg claps/articles, avg articles/user
 async function getAnalytics(req, res) {
-    res.status(500).json({ error: "To be implemented!" });
+    try {
+        let db = await getDB();
+
+        let result = await Promise.all([
+            db.query("SELECT COUNT(*) FROM users WHERE created_at > NOW() - INTERVAL '1 WEEK'"),
+            db.query("SELECT COUNT(*) FROM articles WHERE created_at > NOW() - INTERVAL '1 WEEK'"),
+            db.query("SELECT SUM(count) FROM reactions WHERE created_at > NOW() - INTERVAL '1 WEEK'")
+        ]);
+
+        return res.json({ result: { newUsers: result[0][0].count, newArticles: result[1][0].count, newReactions: result[2][0].sum }});
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
 }
 
+async function getLeaderboard(req, res) {
+    try {
+        let db = await getDB();
+        let result = await db.query("SELECT username, ROUND(SUM(count)::numeric,0) AS total_claps, COUNT(article_id) AS num_articles FROM reactions, users u WHERE reactions.user_id = u.id GROUP BY u.username ORDER BY total_claps DESC");
+
+        return res.json({ result });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
+}
 
 // Division
-async function getXXX(req, res) {
-    res.status(500).json({ error: "To be implemented!" });
+async function getArticlesLikedByAllUsers(req, res) {
+    try {
+        let db = await getDB();
+        let result = await db.query("SELECT a.id, title, content, username FROM articles a JOIN users x on x.id = a.author_id WHERE NOT EXISTS ((SELECT id FROM users) EXCEPT (SELECT r.user_id FROM reactions r WHERE a.id = r.article_id))");
+
+        return res.json({ result });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
 }
 
 module.exports = {
@@ -101,5 +130,6 @@ module.exports = {
     getInstitutions,
     getArticlesByUser,
     getAnalytics,
-    getXXX
+    getLeaderboard,
+    getArticlesLikedByAllUsers
 };
