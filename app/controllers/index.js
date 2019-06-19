@@ -144,6 +144,18 @@ async function getUsers(req, res) {
     }
 }
 
+// Extra
+async function getUser(req, res) {
+    try {
+        let db = await getDB();
+        let result = await db.query("SELECT * FROM users WHERE id = $1 LIMIT 1", req.params.id);
+
+        return res.json({ result: result });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
+}
+
 module.exports = {
     hello,
     postUser,
@@ -156,5 +168,6 @@ module.exports = {
     getLeaderboard,
     getArticlesLikedByAllUsers,
     getTags,
+    getUser,
     getUsers
 };

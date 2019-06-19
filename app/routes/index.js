@@ -66,4 +66,9 @@ router.get('/tags', controllers.getTags);
  */
 router.get('/users', controllers.getUsers);
 
+/***
+ * GET /users/:id
+ */
+router.get('/users/:id', controllers.getUser);
+
 module.exports = router;
