@@ -69,7 +69,14 @@ async function getInstitutions(req, res) {
 
 // JOIN
 async function getArticlesByUser(req, res) {
-    res.status(500).json({ error: "To be implemented!" });
+    try {
+        let db = await getDB();
+        let result = await db.query("SELECT a.id, title, content, a.created_at, username, first_name, last_name FROM articles a, users u WHERE u.id = a.author_id AND u.id = $1", req.params.id);
+
+        return res.json({ result });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
 }
 
 // Aggregation (and nested aggregation)
