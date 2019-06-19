@@ -1,19 +1,19 @@
 -- Database: rounders
 
-DROP TABLE users;
-DROP TABLE tags;
-DROP TABLE articles;
-DROP TABLE companies;
-DROP TABLE sponsored_articles;
-DROP TABLE comments;
-DROP TABLE bank_accounts;
-DROP TABLE institutions;
-DROP TABLE bank_records;
-DROP TABLE distribution_records;
-DROP TABLE reactions;
-DROP TABLE user_followings;
-DROP TABLE tag_followings;
-DROP TABLE article_tags;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS tags;
+DROP TABLE IF EXISTS articles;
+DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS sponsored_articles;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS bank_accounts;
+DROP TABLE IF EXISTS institutions;
+DROP TABLE IF EXISTS bank_records;
+DROP TABLE IF EXISTS distribution_records;
+DROP TABLE IF EXISTS reactions;
+DROP TABLE IF EXISTS user_followings;
+DROP TABLE IF EXISTS tag_followings;
+DROP TABLE IF EXISTS article_tags;
 
 
 CREATE TABLE IF NOT EXISTS users(
