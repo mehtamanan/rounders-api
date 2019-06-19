@@ -56,7 +56,15 @@ async function getArticles(req, res) {
 
 // PROJECTION
 async function getInstitutions(req, res) {
-    res.status(500).json({ error: "To be implemented!" });
+    try {
+        let db = await getDB();
+        let fields = req.query.include ? req.query.include : "*";
+        let result = await db.query("SELECT $1:name FROM institutions", [ fields ]);
+
+        return res.json({ result });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
 }
 
 // JOIN
