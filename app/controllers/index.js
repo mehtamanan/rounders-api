@@ -43,7 +43,16 @@ async function patchUser(req, res) {
 
 // SELECTION
 async function getArticles(req, res) {
-    res.status(500).json({ error: "To be implemented!" });
+    try {
+        let db = await getDB();
+        let title = req.query.title ? `%${req.query.title}%` : "%";
+
+        let result = await db.query("SELECT a.id, title, content, a.created_at, username, first_name, last_name FROM articles a, users u WHERE LOWER(title) LIKE LOWER($1) AND u.id = a.author_id", title);
+
+        return res.json({ result });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
 }
 
 // PROJECTION
