@@ -132,6 +132,18 @@ async function getTags(req, res) {
     }
 }
 
+// Extra
+async function getUsers(req, res) {
+    try {
+        let db = await getDB();
+        let result = await db.query("SELECT * FROM users");
+
+        return res.json({ result });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
+}
+
 module.exports = {
     hello,
     postUser,
@@ -143,5 +155,6 @@ module.exports = {
     getAnalytics,
     getLeaderboard,
     getArticlesLikedByAllUsers,
-    getTags
+    getTags,
+    getUsers
 };
