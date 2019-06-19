@@ -79,9 +79,7 @@ async function getArticlesByUser(req, res) {
     }
 }
 
-// Aggregation (and nested aggregation)
-// 1. Count of all new users and new articles and new claps
-// 2. Avg claps/user, avg claps/articles, avg articles/user
+// Aggregates
 async function getAnalytics(req, res) {
     try {
         let db = await getDB();
@@ -98,6 +96,7 @@ async function getAnalytics(req, res) {
     }
 }
 
+// Nested Aggregates
 async function getLeaderboard(req, res) {
     try {
         let db = await getDB();
