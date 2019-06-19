@@ -33,7 +33,7 @@ async function deleteArticle(req, res) {
 async function patchUser(req, res) {
     try {
         let db = await getDB();
-        let result = await db.result("UPDATE users SET password = $2 WHERE id = $1", [ req.params.id, req.body.password ]);
+        let result = await db.result("UPDATE users SET password = g$2 WHERE id = $1", [ req.params.id, req.body.password ]);
 
         return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
     } catch (err) {
