@@ -25,15 +25,15 @@ CREATE TABLE IF NOT EXISTS articles(
 
 CREATE TABLE IF NOT EXISTS companies(
     id SERIAL PRIMARY KEY,
-    name varchar(255),
-    phone varchar(15) UNIQUE,
+    name VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS sponsored_articles(
-    id INTEGER PRIMARY KEY REFERENCES articles(id) ON DELETE CASCADE,
+    article_id INTEGER PRIMARY KEY REFERENCES articles(id) ON DELETE CASCADE,
     company_id INTEGER NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
-    promotion_until timestamp NOT NULL DEFAULT NOW(),
+    promotion_until TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '1 DAY',
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -45,22 +45,22 @@ CREATE TABLE IF NOT EXISTS comments (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS instituitions(
+CREATE TABLE IF NOT EXISTS institutions(
     bank_code CHAR(3) PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS bank_accounts(
-    account_number CHAR(10) PRIMARY KEY,
+    account_number CHAR(17) PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    bank_code CHAR(3) NOT NULL REFERENCES instituitions(bank_code),
-    transit_number CHAR(7) NOT NULL,
+    bank_code CHAR(3) NOT NULL REFERENCES institutions(bank_code),
+    transit_number CHAR(5) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS bank_records(
     id SERIAL PRIMARY KEY,
-    account_number CHAR(10) NOT NULL REFERENCES bank_accounts(account_number) ON DELETE CASCADE,
+    account_number CHAR(17) NOT NULL REFERENCES bank_accounts(account_number) ON DELETE CASCADE,
     amount NUMERIC(12,2) NOT NULL,
     action BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()

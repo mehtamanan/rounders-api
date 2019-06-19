@@ -1,0 +1,121 @@
+-- Database: rounders
+
+INSERT INTO users (username, email, password, first_name, last_name) VALUES ('harry', 'harry@hogwarts.edu', 'alohomora', 'Harry', 'Potter');
+INSERT INTO users (username, email, password, first_name, last_name) VALUES ('hermoine', 'hermoine@hogwarts.edu', 'lumos', 'Hermoine', 'Granger');
+INSERT INTO users (username, email, password, first_name, last_name) VALUES ('ron', 'ron@hogwarts.edu', 'expelliarmus', 'Ron', 'Weasley');
+INSERT INTO users (username, email, password, first_name, last_name) VALUES ('albus', 'albus@hogwarts.edu', 'accio', 'Albus', 'Dumbledore');
+INSERT INTO users (username, email, password, first_name, last_name) VALUES ('voldemort', 'voldemort@hogwarts.edu', 'riddikulus', 'Tom', 'Riddle');
+
+INSERT INTO tags (label) VALUES ('charms');
+INSERT INTO tags (label) VALUES ('potions');
+INSERT INTO tags (label) VALUES ('defence-against-the-dark-arts');
+INSERT INTO tags (label) VALUES ('transfiguration');
+INSERT INTO tags (label) VALUES ('herbology');
+INSERT INTO tags (label) VALUES ('astronomy');
+
+Insert into articles (author_id, title, content) VALUES (1, 'Discover your Patronus', 'The Patronus is the most famous (and famously difficult) defensive charm. The aim is to produce a silvery-white guardian or protector, which takes the form of an animal. The exact form of the Patronus will not be apparent until the spell has been successfully cast. One of the most powerful defensive charms known to wizardkind, the Patronus can also be used as a messenger between wizards. As a pure, protective magical concentration of happiness and hope (the recollection of a single talisman memory is essential in its creation) it is the only spell effective against Dementors. The majority of witches and wizards are unable to produce Patronuses and to do so is generally considered a mark of superior magical ability.');
+Insert into articles (author_id, title, content) VALUES (2, 'Polyjuice Potion', 'Polyjuice Potion is a potion that allows the drinker to assume the form of someone else. It is a complicated and challenging potion that even adult witches and wizards struggle to brew correctly.');
+Insert into articles (author_id, title, content) VALUES (2, 'Riddikulus fact file', 'The Boggart-Banishing Spell (Riddikulus) is a charm that is used to defeat a Boggart. It causes the creature to assume a form that is humorous to the caster, along with a whip-crack noise, thereby taking away the its ability to terrorise.');
+Insert into articles (author_id, title, content) VALUES (3, 'Asphodel huh?', 'Asphodel has both magical and non-magical uses. Powdered root of Asphodel is used in the creation of various potions, such as the Draught of Living Death and the Wiggenweld Potion.');
+Insert into articles (author_id, title, content) VALUES (1, 'BLACK STILL AT LARGE', 'Sirius Black, possibly the most infamous prisoner ever to be held in Azkaban fortress, is still eluding capture, the Ministry of Magic confirmed today.');
+
+INSERT INTO companies (name, email) VALUES ('Ollivanders', 'hello@ollivanders.com');
+INSERT INTO companies (name, email) VALUES ('Gringotts Wizarding Bank', 'frontdesk@gringotts.com');
+INSERT INTO companies (name, email) VALUES ('The Leaky Cauldron', 'hello@leakycauldron.com');
+INSERT INTO companies (name, email) VALUES ('Honeydukes', 'hello@honeydukes.com');
+INSERT INTO companies (name, email) VALUES ('Ministry of Magic.', 'support@ministryofmagic.com');
+
+INSERT INTO sponsored_articles (article_id, company_id) VALUES (1, 1);
+INSERT INTO sponsored_articles (article_id, company_id) VALUES (2, 5);
+INSERT INTO sponsored_articles (article_id, company_id) VALUES (3, 1);
+INSERT INTO sponsored_articles (article_id, company_id) VALUES (4, 5);
+INSERT INTO sponsored_articles (article_id, company_id) VALUES (5, 5);
+
+INSERT INTO comments (message, author_id, article_id) VALUES ('Wow, mine is a Stag!!', 1, 1);
+INSERT INTO comments (message, author_id, article_id) VALUES ('Too tough!', 3, 2);
+INSERT INTO comments (message, author_id, article_id) VALUES ('He is dangerous!', 3, 5);
+INSERT INTO comments (message, author_id, article_id) VALUES ('I can beat him, no stress!', 4, 5);
+INSERT INTO comments (message, author_id, article_id) VALUES ('He is loyal to me!', 5, 5);
+
+Insert into institutions values ('934', 'WIZ');
+Insert into institutions values ('016', 'HSBC');
+Insert into institutions values ('004', 'TD');
+Insert into institutions values ('001', 'BMO');
+Insert into institutions values ('003', 'RBC');
+
+Insert into bank_accounts (account_number, user_id, bank_code, transit_number) values ('010-05179-3347898', 1, '934', '05179');
+Insert into bank_accounts (account_number, user_id, bank_code, transit_number) values ('016-29044-4855692', 2, '934', '29044');
+Insert into bank_accounts (account_number, user_id, bank_code, transit_number) values ('004-95866-2095814', 3, '934', '95866');
+Insert into bank_accounts (account_number, user_id, bank_code, transit_number) values ('010-83347-5667903', 4, '934', '83347');
+Insert into bank_accounts (account_number, user_id, bank_code, transit_number) values ('001-40076-1953497', 5, '934', '40076');
+
+Insert into bank_records (account_number, amount, action) values ('010-05179-3347898', 5, FALSE);
+Insert into bank_records (account_number, amount, action) values ('016-29044-4855692', 5, TRUE);
+Insert into bank_records (account_number, amount, action) values ('004-95866-2095814', 5, TRUE);
+Insert into bank_records (account_number, amount, action) values ('004-95866-2095814', 5, TRUE);
+Insert into bank_records (account_number, amount, action) values ('004-95866-2095814', 5, FALSE);
+
+CREATE TABLE IF NOT EXISTS distribution_records(
+    id SERIAL PRIMARY KEY,
+    from_id INTEGER NOT NULL REFERENCES users(id),
+    to_id INTEGER NOT NULL REFERENCES users(id),
+    amount NUMERIC(12,2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+Insert into distribution_records (from_id, to_id, amount) values (1, 2, 1.3);
+Insert into distribution_records (from_id, to_id, amount) values (1, 2, 1.2);
+Insert into distribution_records (from_id, to_id, amount) values (3, 2, 1.7);
+Insert into distribution_records (from_id, to_id, amount) values (3, 1, 2);
+Insert into distribution_records (from_id, to_id, amount) values (3, 5, 1);
+
+CREATE TABLE IF NOT EXISTS reactions(
+    article_id INTEGER NOT NULL REFERENCES articles(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    count INTEGER NOT NULL CHECK (count <= 50),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (article_id, user_id)
+);
+
+INSERT INTO reactions (article_id, user_id, count) values (1, 1, 40);
+INSERT INTO reactions (article_id, user_id, count) values (1, 2, 5);
+INSERT INTO reactions (article_id, user_id, count) values (1, 3, 15);
+INSERT INTO reactions (article_id, user_id, count) values (3, 1, 25);
+INSERT INTO reactions (article_id, user_id, count) values (3, 4, 12);
+
+INSERT INTO user_followings VALUES (1, 2);
+INSERT INTO user_followings VALUES (1, 3);
+INSERT INTO user_followings VALUES (2, 1);
+INSERT INTO user_followings VALUES (2, 3);
+INSERT INTO user_followings VALUES (1, 4);
+
+INSERT INTO tag_followings VALUES (1, 1);
+INSERT INTO tag_followings VALUES (1, 2);
+INSERT INTO tag_followings VALUES (1, 3);
+INSERT INTO tag_followings VALUES (2, 1);
+INSERT INTO tag_followings VALUES (2, 2);
+
+INSERT INTO article_tags VALUES (1, 3);
+INSERT INTO article_tags VALUES (1, 4);
+INSERT INTO article_tags VALUES (2, 5);
+INSERT INTO article_tags VALUES (3, 3);
+INSERT INTO article_tags VALUES (4, 2);
+
+
+/* ---------------------------------- DISPLAY DATA ---------------------------------- */
+
+SELECT * FROM users;
+SELECT * FROM tags;
+SELECT * FROM articles;
+SELECT * FROM companies;
+SELECT * FROM sponsored_articles;
+SELECT * FROM comments;
+SELECT * FROM institutions;
+SELECT * FROM bank_accounts;
+SELECT * FROM bank_records;
+SELECT * FROM distribution_records;
+SELECT * FROM reactions;
+SELECT * FROM user_followings;
+SELECT * FROM tag_followings;
+SELECT * FROM article_tags;
+
