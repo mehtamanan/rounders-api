@@ -9,10 +9,9 @@ async function hello(req, res) {
 async function postUser(req, res) {
     try {
         let db = await getDB();
-        await db.query('INSERT INTO users(${this:name}) VALUES(${this:csv})', req.body);
+        let result = await db.result('INSERT INTO users(${this:name}) VALUES(${this:csv})', req.body);
 
-        let count = await db.query('SELECT COUNT(id) FROM users');
-        return res.json({ count });
+        return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
     } catch (err) {
         return res.status(400).json({ error: err });
     }
@@ -22,10 +21,9 @@ async function postUser(req, res) {
 async function deleteArticle(req, res) {
     try {
         let db = await getDB();
-        await db.query('DELETE FROM articles WHERE id = $1', req.params.id);
+        let result = await db.query('DELETE FROM articles WHERE id = $1', req.params.id);
 
-        let count = await db.query('SELECT COUNT(id) FROM articles');
-        return res.json({ count });
+        return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
     } catch (err) {
         return res.status(400).json({ error: err });
     }
