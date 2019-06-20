@@ -149,6 +149,29 @@ async function getDeepArticles(req, res) {
     }
 }
 
+// FOR BONUS
+async function postReaction(req, res) {
+    try {
+        let db = await getDB();
+        let result = await db.result("INSERT INTO reactions(${this:name}) VALUES(${this:csv})", req.body);
+
+        return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
+}
+
+async function patchReaction(req, res) {
+    try {
+        let db = await getDB();
+        let result = await db.result("UPDATE reactions SET count = $3 WHERE user_id = $1 AND article_id = $2", [ req.params.user_id, req.params.article_id, req.body.count ]);
+
+        return res.json({ result: { rowsAffected: result.rowCount, command: result.command } });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
+}
+
 // EXTRAS
 async function getTags(req, res) {
     try {
@@ -199,5 +222,7 @@ module.exports = {
     getTags,
     getUser,
     getUsers,
-    getDeepArticles
+    getDeepArticles,
+    postReaction,
+    patchReaction
 };

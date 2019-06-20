@@ -76,4 +76,16 @@ router.get('/users', controllers.getUsers);
  */
 router.get('/users/:id', controllers.getUser);
 
+
+/***
+ * POST /reactions
+ */
+router.post('/reactions', controllers.postReaction);
+
+
+/***
+ * PATCH /reactions/:user_id/:article_id
+ */
+router.patch('/reactions/:user_id/:article_id', controllers.patchReaction);
+
 module.exports = router;
