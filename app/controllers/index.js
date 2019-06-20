@@ -120,6 +120,35 @@ async function getArticlesLikedByAllUsers(req, res) {
     }
 }
 
+// BONUS
+async function getDeepArticles(req, res) {
+    try {
+        let db = await getDB();
+        let q = `SELECT
+                    a.id,
+                    a.title,
+                    a.content,
+                    a.created_at,
+                    u.username,
+                    u.first_name,
+                    u.last_name,
+                    JSON_AGG(JSON_BUILD_OBJECT('count', r.count, 'user_id', x.id, 'username', x.username, 'first_name', x.first_name, 'last_name', x.last_name)) AS reactions
+                FROM articles a
+                JOIN users u
+                ON a.author_id = u.id
+                LEFT JOIN reactions r
+                ON a.id = r.article_id
+                LEFT JOIN users x
+                on r.user_id = x.id
+                GROUP BY a.id, a.title, a.content, a.created_at, u.username, u.first_name, u.last_name`;
+        let result = await db.query(q);
+
+        return res.json({ result });
+    } catch (err) {
+        return res.status(400).json({ error: err });
+    }
+}
+
 // EXTRAS
 async function getTags(req, res) {
     try {
@@ -169,5 +198,6 @@ module.exports = {
     getArticlesLikedByAllUsers,
     getTags,
     getUser,
-    getUsers
+    getUsers,
+    getDeepArticles
 };

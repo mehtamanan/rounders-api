@@ -27,6 +27,11 @@ router.delete('/articles/:id', controllers.deleteArticle);
 router.patch('/users/:id', controllers.patchUser);
 
 /***
+ * GET /articles/deep
+ */
+router.get('/articles/deep', controllers.getDeepArticles);
+
+/***
  * GET /articles
  */
 router.get('/articles', controllers.getArticles);
