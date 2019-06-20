@@ -132,7 +132,7 @@ async function getDeepArticles(req, res) {
                     u.username,
                     u.first_name,
                     u.last_name,
-                    JSON_AGG(JSON_BUILD_OBJECT('count', r.count, 'user_id', x.id, 'username', x.username, 'first_name', x.first_name, 'last_name', x.last_name)) AS reactions
+                    JSON_AGG(JSON_STRIP_NULLS(JSON_BUILD_OBJECT('count', r.count, 'user_id', x.id, 'username', x.username, 'first_name', x.first_name, 'last_name', x.last_name))) AS reactions
                 FROM articles a
                 JOIN users u
                 ON a.author_id = u.id
